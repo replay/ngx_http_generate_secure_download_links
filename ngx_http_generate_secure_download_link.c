@@ -203,14 +203,14 @@ static ngx_int_t ngx_http_generate_secure_download_link_handler(ngx_http_request
         return rc;
     }
     
-    if (r->headers_in.if_modified_since) {
-        return NGX_HTTP_NOT_MODIFIED;
-    }
+    //if (r->headers_in.if_modified_since) {
+    //    return NGX_HTTP_NOT_MODIFIED;
+    //}
     
     state.conf = gsdllc;
     state.r = r;
     
-    if (r->method == NGX_HTTP_HEAD) {
+    /*if (r->method == NGX_HTTP_HEAD) {
         r->headers_out.status = NGX_HTTP_OK;
         
         rc = ngx_http_send_header(r);
@@ -218,7 +218,7 @@ static ngx_int_t ngx_http_generate_secure_download_link_handler(ngx_http_request
         if (rc == NGX_ERROR || rc > NGX_OK || r->header_only) {
             return rc;
         }
-    }
+    }*/
     
     if (ngx_http_generate_secure_download_link_run_scripts(&state) != NGX_OK) {
         return NGX_ERROR;
@@ -250,7 +250,7 @@ static ngx_int_t ngx_http_generate_secure_download_link_handler(ngx_http_request
         return NGX_HTTP_INTERNAL_SERVER_ERROR;
     }
     out.buf = state.result_b;
-    out.buf->last_buf = 1;
+    out.buf->last_buf = 1; 
     out.buf->memory = 1;
     
     if (ngx_http_generate_secure_download_link_do_generation(&state) != NGX_OK) {
@@ -337,9 +337,9 @@ static ngx_int_t ngx_http_generate_secure_download_link_do_generation(ngx_http_g
     memcpy(result_pos, htimestamp, 8);
     
     state->result_b->pos = result;
-    state->result_b->last = result_pos + 7;
     result_pos += 8;
-    *result_pos = NULL;
+    state->result_b->last = result_pos;
+    *state->result_b->last = NULL;
     
     printf("reply will be %s\n", result);
     return NGX_OK;

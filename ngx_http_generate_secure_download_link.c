@@ -282,9 +282,6 @@ static ngx_int_t ngx_http_generate_secure_download_link_handler(ngx_http_request
         return NGX_ERROR;
     }
     
-    ngx_pfree(state.r->pool, state.url.data);
-    ngx_pfree(state.r->pool, state.secret.data);
-    
     /*printf("counted content_length is %i\n", (int) (out.buf->last - out.buf->pos + 1));
     printf("returning with buffer \"%s\"\n", out.buf->pos);*/
     
@@ -304,17 +301,27 @@ static ngx_int_t ngx_http_generate_secure_download_link_run_scripts(ngx_http_gen
     
     state->url.data = ngx_pcalloc(state->r->pool, sizeof(char) * (url.len + 1));
     state->secret.data = ngx_pcalloc(state->r->pool, sizeof(char) * (secret.len + 1));
+
+    if (state->url.data == NULL || state->secret.data == NULL) {
+        return NGX_ERROR;
+    }
     
-    memcpy(state->url.data, url.data, url.len);
-    memcpy(state->url.data, url.data, url.len);
+    ngx_memcpy(state->url.data, url.data, url.len);
+    ngx_memcpy(state->secret.data, secret.data, secret.len);
     state->url.len = url.len;
     state->secret.len = secret.len;
     
-    state->url.data[state->url.len + 1] = (char) 0;
-    state->secret.data[state->secret.len + 1] = (char) 0;
+	/*printf("state->url.len is %i, state->url.data is \"%s\"\n", (int) state->url.len, state->url.data);
+	printf("state->secret.len is %i, state->secret.data is \"%s\"\n", (int) state->secret.len, state->secret.data);*/
+
+    state->url.data[url.len] = (char) 0;
+    state->secret.data[secret.len] = (char) 0;
+
+/*	printf("url.len is %i, url.data is \"%s\"\n", (int) url.len, url.data);
+	printf("secret.len is %i, secret.data is \"%s\"\n", (int) secret.len, secret.data);
     
-    ngx_pfree(state->r->pool, secret.data);
-    ngx_pfree(state->r->pool, url.data);
+	printf("state->url.len is %i, state->url.data is \"%s\"\n", (int) state->url.len, state->url.data);
+	printf("state->secret.len is %i, state->secret.data is \"%s\"\n", (int) state->secret.len, state->secret.data);*/
     
     return NGX_OK;
 }
@@ -343,10 +350,13 @@ static ngx_int_t ngx_http_generate_secure_download_link_do_generation(ngx_http_g
     result_pos  = result;
     
     dtimestamp = (time_t) time(NULL);
+    dtimestamp += state->conf->expiration_time;
     //printf("%i\n",dtimestamp);
     sprintf(htimestamp, "%08X", dtimestamp);
     //printf("%s\n", htimestamp);
     
+	//printf("secret.data is \"%s\"\n", state->secret.data);
+	//printf("url.data is \"%s\"\n", state->url.data);
     memcpy(to_hash_pos, state->url.data, state->url.len);
     to_hash_pos += state->url.len;
     *to_hash_pos++ = '/';
@@ -363,6 +373,7 @@ static ngx_int_t ngx_http_generate_secure_download_link_do_generation(ngx_http_g
         ngx_pfree(state->r->pool, to_hash);
         return NGX_ERROR;
     }
+    //printf("string to be hashed: \"%s\"\n", to_hash);
     mhash(td, to_hash, to_hash_len);
     mhash_deinit(td, generated_hash);
     

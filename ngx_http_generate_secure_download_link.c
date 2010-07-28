@@ -147,7 +147,7 @@ ngx_http_generate_secure_download_link_merge_loc_conf(ngx_conf_t *cf, void *pare
 
     ngx_conf_merge_value(conf->enable, prev->enable, 0);
     ngx_conf_merge_str_value(conf->url, prev->url, "");
-    ngx_conf_merge_uint_value(conf->expiration_time, prev->expiration_time, NGX_CONF_UNSET);
+    ngx_conf_merge_uint_value(conf->expiration_time, prev->expiration_time, NGX_CONF_UNSET_UINT);
     ngx_conf_merge_str_value(conf->secret, prev->secret, "");
 
     if (conf->enable == 0) {
@@ -166,7 +166,7 @@ ngx_http_generate_secure_download_link_merge_loc_conf(ngx_conf_t *cf, void *pare
              return NGX_CONF_ERROR;
     }
     
-    if (conf->expiration_time == NGX_CONF_UNSET) {
+    if (conf->expiration_time == NGX_CONF_UNSET_UINT) {
           ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                "no generate_secure_download_link_expiration_time specified");
              return NGX_CONF_ERROR;
@@ -329,8 +329,6 @@ static ngx_int_t ngx_http_generate_secure_download_link_do_generation(ngx_http_g
     u_char *result;
     u_char *result_pos;
     int to_hash_len;
-    int result_len;
-    char hash[33];
     MHASH td;
     int i;
     static const char xtoc[] = "0123456789abcdef";

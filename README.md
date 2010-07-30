@@ -50,9 +50,7 @@ Parameters: int
 
 Default: 1
 
-Time in seconds which specifies how often the links should be regenerated. This also influences the precision of the spcified expiration time. If period_length is 60 and expiration_time is 300, the generated links will be valid for a timerange between 240 and 300 seconds.
-
-You might be wondering why anybody would want a period_length other than 1 second, simply because the browser caches don't work if the link changes every second.
+Time in seconds which specifies how often the links should be regenerated. This also influences the precision of the spcified expiration time.
 
 ### generate_secure_download_link_secret ###
 
@@ -126,3 +124,16 @@ So there you have a valid url with the \\ in front of each /.
 
 ### Periodical expiration times ###
 
+A problem that I first ran into was that the browser caches don't work if the link changes every second, because it contains the timestamp. The solution for this problem was to introduce periodically generated expiration times. To enable this you can specify an amount of seconds in the parameter generate_secure_download_link_period_length.
+
+	42        location /gen_sec_link_json {
+	43             internal;
+	44             rewrite /gen_sec_link_json(.*)$ $1 break;
+	45             generate_secure_download_link_expiration_time 300;
+	46             generate_secure_download_link_secret $remote_addr;
+	47             generate_secure_download_link_url $uri;
+	48             generate_secure_download_link on;
+	49             generate_secure_download_link_period_length 60;
+	50         }
+
+A period length of 60 means that the Nginx first does the calculation of the timestamp when the link expires like usual, but then does "expiration_time = (expiration_time / period_length) * period_length" which simply floors the result down to the last multiple of period_length. So if you specify expiration_time 300 seconds and period_length 60 seconds, then the link will be valid for something between 240 and 300 seconds. This also means that the link will be changing only every 60 seconds, which allows the browser cache to do its working during that timespan.

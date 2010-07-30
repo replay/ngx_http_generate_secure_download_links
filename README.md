@@ -8,7 +8,7 @@
 
 nginx module to generate secure download links that can be used in combination with the module [ngx_http_secure_download](http://wiki.nginx.org/NginxHttpSecureDownload "ngx_http_secure_download"). 
 
-ngx_http_generate_secure_download_links should be used via ssi, so it can replace ssi tags by secured download links on the fly like an output filter.
+The ngx_http_generate_secure_download_links module should be called via SSI, so it can replace SSI tags by secured download links on the fly like an output filter.
 
 ## Parameters ##
 

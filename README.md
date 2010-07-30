@@ -12,31 +12,31 @@ ngx_http_generate_secure_download_links should be used via ssi, so it can replac
 
 ## Parameters ##
 
-* generate_secure_download_link
+### generate_secure_download_link ###
 
 Parameters: on/off
 
 Enable/disable the module for this location
 
-* generate_secure_download_link_json
+### generate_secure_download_link_json ###
 
 Parameters: on/off
 
 Add \ in front of all /, like json requires it
 
-* generate_secure_download_link_url
+### generate_secure_download_link_url ###
 
 Parameters: string
 
 The url that should be secured
 
-* generate_secure_download_link_expiration_time
+### generate_secure_download_link_expiration_time ###
 
 Parameters: int
 
 Time in seconds until the generated link should not be valid anymore
 
-* generate_secure_download_link_period_length
+### generate_secure_download_link_period_length ###
 
 Parameters: int
 

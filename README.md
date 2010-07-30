@@ -75,7 +75,7 @@ This is a very simple example which is making the Nginx generate links that expi
 	43             internal;
 	44             rewrite /gen_sec_link(.*)$ $1 break;
 	45             generate_secure_download_link_expiration_time 3600;
-	46             generate_secure_download_link_secret $remote_addr;
+	46             generate_secure_download_link_secret MySecret$remote_addr;
 	47             generate_secure_download_link_url $uri;
 	48             generate_secure_download_link on;
 	49         }

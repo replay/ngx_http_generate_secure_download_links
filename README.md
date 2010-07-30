@@ -1,9 +1,3 @@
-## TOC ##
-
-* Overview
-* Parameters
-* Howto by example
-
 ## Overview ##
 
 nginx module to generate secure download links that can be used in combination with the module [ngx_http_secure_download](http://wiki.nginx.org/NginxHttpSecureDownload "ngx_http_secure_download"). 

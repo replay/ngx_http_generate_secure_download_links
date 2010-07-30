@@ -16,11 +16,15 @@ ngx_http_generate_secure_download_links should be used via ssi, so it can replac
 
 Parameters: on/off
 
+Default: off
+
 Enable/disable the module for this location
 
 ### generate_secure_download_link_json ###
 
 Parameters: on/off
+
+Default: off
 
 Add \ in front of all /, like json requires it
 
@@ -28,11 +32,15 @@ Add \ in front of all /, like json requires it
 
 Parameters: string
 
+Default: <none> \(required\)
+
 The url that should be secured
 
 ### generate_secure_download_link_expiration_time ###
 
 Parameters: int
+
+Default: <none> \(required\)
 
 Time in seconds until the generated link should not be valid anymore
 
@@ -40,11 +48,17 @@ Time in seconds until the generated link should not be valid anymore
 
 Parameters: int
 
+Default: 0
+
 Time in seconds which specifies how often the links should be regenerated. This also influences the precision of the spcified expiration time. If period_length is 60 and expiration_time is 300, the generated links will be valid for a timerange between 240 and 300 seconds.
 
-* generate_secure_download_link_secret
+You might be wondering why anybody would want a period_length other than 1 second, simply because the browser caches don't work if the link changes every second.
+
+### generate_secure_download_link_secret ###
 
 Parameters: string
+
+Default: <none> \(required\)
 
 A string which should act as some kind of salt in the MD5 hash. It can also contain variables like the $remote_addr.
 

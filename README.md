@@ -104,6 +104,16 @@ One problem that i met is that in some cases you might want to output the secure
 
 What you have to do is to output an unescaped link in the backend, but tell the Nginx to do the JSON escaping, using the parameter generate_secure_download_link_json in the Nginx conf.
 
+42        location /gen_sec_link_json {
+43             internal;
+44             rewrite /gen_sec_link_json(.*)$ $1 break;
+45             generate_secure_download_link_expiration_time 3600;
+46             generate_secure_download_link_secret $remote_addr;
+47             generate_secure_download_link_url $uri;
+48             generate_secure_download_link on;
+49             generate_secure_download_link_json on;
+50         }
+
 If your backend generates a JSON like for example this:
 
 	{"preview_html":"style=\"background: url(http:\/\/bilder.lab<!--# include virtual='/gen_sec_link_json/9/8/C/28904_300.jpg' -->) no-repeat;\"

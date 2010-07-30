@@ -126,9 +126,9 @@ So there you have a valid url with the \\ in front of each /.
 
 A problem that I first ran into was that the browser caches don't work if the link changes every second, because it contains the timestamp. The solution for this problem was to introduce periodically generated expiration times. To enable this you can specify an amount of seconds in the parameter generate_secure_download_link_period_length.
 
-	42        location /gen_sec_link_json {
+	42        location /gen_sec_link {
 	43             internal;
-	44             rewrite /gen_sec_link_json(.*)$ $1 break;
+	44             rewrite /gen_sec_link(.*)$ $1 break;
 	45             generate_secure_download_link_expiration_time 300;
 	46             generate_secure_download_link_secret MySecret$remote_addr;
 	47             generate_secure_download_link_url $uri;

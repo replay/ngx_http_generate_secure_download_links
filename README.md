@@ -64,7 +64,7 @@ A string which should act as some kind of salt in the MD5 hash. It can also cont
 
 ## Howto by example ##
 
-### simple ###
+### simple example ###
 
 This is a very simple example which is making the Nginx generate links that expire after 1 hour. In the location / its important that SSI is turned on, because the generate_secure_download_links_module is access via the SSI. 
 
@@ -97,3 +97,19 @@ The Nginx SSI module will see the \<!\-\-\# include \-\-\> tag and replace it by
 	3 some more text
 	4 <a href="http://somewhateverhost.com/this_is_another_link/badbcb4d20500cca464c609da41001b2/4C4EC7C3">this_is_another_link</a>
 	5 even more text
+
+### JSON ###
+
+One problem that i met is that in some cases you might want to output the secured link in json, which requires / to be escaped by \\. You could already generate an escaped string on the backend and put it into the virtual parameter of the SSI tag, which will then be secured by the Nginx. But the problem is that like this the \\ will be included in the MD5 hash. So when you then actually go to this page, you or the browser will take the \\ away so then the MD5 hash does not match anymore. 
+
+What you have to do is to output an unescaped link in the backend, but tell the Nginx to do the JSON escaping, using the parameter generate_secure_download_link_json in the Nginx conf.
+
+If your backend generates a JSON like for example this:
+
+	{"preview_html":"style=\"background: url(http:\/\/bilder.lab<!--# include virtual='/gen_sec_link_json/9/8/C/28904_300.jpg' -->) no-repeat;\"
+
+The output might look like this:
+
+	{"preview_html":"style=\"background: url(http:\/\/bilder.lab\/gen_sec_link_json\/9\/8\/C\/28904_300.jpg\/badbcb4d20500cca464c609da41001b2\/4C4EC7C3) no-repeat;\"
+
+So there you have a valid url with the \\ in front of each /.

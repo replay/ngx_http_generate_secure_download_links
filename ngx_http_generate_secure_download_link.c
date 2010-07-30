@@ -169,7 +169,7 @@ ngx_http_generate_secure_download_link_merge_loc_conf(ngx_conf_t *cf, void *pare
 
     ngx_conf_merge_value(conf->enable, prev->enable, 0);
     ngx_conf_merge_value(conf->json, prev->json, 0);
-    ngx_conf_merge_value(conf->period_length, prev->period_length, 1);
+    ngx_conf_merge_uint_value(conf->period_length, prev->period_length, 1);
     ngx_conf_merge_str_value(conf->url, prev->url, "");
     ngx_conf_merge_uint_value(conf->expiration_time, prev->expiration_time, NGX_CONF_UNSET_UINT);
     ngx_conf_merge_str_value(conf->secret, prev->secret, "");
@@ -246,7 +246,6 @@ static ngx_int_t ngx_http_generate_secure_download_link_handler(ngx_http_request
 {
     ngx_chain_t   out;
     ngx_int_t     rc;
-    ngx_int_t     expiration_specification_length;
     
     ngx_http_generate_secure_download_link_state_t state;
     ngx_http_generate_secure_download_link_loc_conf_t *gsdllc = ngx_http_get_module_loc_conf(r, ngx_http_generate_secure_download_link_module);
@@ -444,8 +443,7 @@ static ngx_int_t ngx_http_generate_secure_download_link_do_generation(ngx_http_g
 }
 
 static ngx_int_t ngx_http_generate_secure_download_link_create_expiration_specification_string(ngx_http_generate_secure_download_link_state_t *state) {
-    unsigned int dtimestamp, ts_last_period;
-    ngx_int_t mode = state->conf->mode;
+    unsigned int dtimestamp;
     ngx_str_t *result = &state->expiration_specification;
     
     dtimestamp = (time_t) time(NULL);
@@ -455,8 +453,8 @@ static ngx_int_t ngx_http_generate_secure_download_link_create_expiration_specif
     }
     // 12 = max string len of converted int plus terminating \0
     result->data = ngx_pcalloc(state->r->pool, sizeof(char) * 12);
-    sprintf(result->data, "%X", dtimestamp);
-    result->len = strlen(result->data);
+    sprintf((char *)result->data, "%X", dtimestamp);
+    result->len = strlen((const char *) result->data);
 
     return NGX_OK;
 }

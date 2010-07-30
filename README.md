@@ -1,4 +1,4 @@
-# TOC #
+## TOC ##
 
 * Overview
 * Parameters
@@ -32,7 +32,7 @@ Add \ in front of all /, like json requires it
 
 Parameters: string
 
-Default: <none> \(required\)
+Default: "" \(required\)
 
 The url that should be secured
 
@@ -40,7 +40,7 @@ The url that should be secured
 
 Parameters: int
 
-Default: <none> \(required\)
+Default: "" \(required\)
 
 Time in seconds until the generated link should not be valid anymore
 
@@ -58,7 +58,7 @@ You might be wondering why anybody would want a period_length other than 1 secon
 
 Parameters: string
 
-Default: <none> \(required\)
+Default: "" \(required\)
 
 A string which should act as some kind of salt in the MD5 hash. It can also contain variables like the $remote_addr.
 

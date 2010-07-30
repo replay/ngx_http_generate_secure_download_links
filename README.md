@@ -48,7 +48,7 @@ Time in seconds until the generated link should not be valid anymore
 
 Parameters: int
 
-Default: 0
+Default: 1
 
 Time in seconds which specifies how often the links should be regenerated. This also influences the precision of the spcified expiration time. If period_length is 60 and expiration_time is 300, the generated links will be valid for a timerange between 240 and 300 seconds.
 

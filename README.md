@@ -11,11 +11,11 @@ ngx_http_generate_secure_download_links should be used via ssi, so it can replac
 
 ## Parameters ##
 
-generate_secure_download_link
-generate_secure_download_link_json
-generate_secure_download_link_url
-generate_secure_download_link_expiration_time
-generate_secure_download_link_period_length
-generate_secure_download_link_secret
+* generate_secure_download_link
+* generate_secure_download_link_json
+* generate_secure_download_link_url
+* generate_secure_download_link_expiration_time
+* generate_secure_download_link_period_length
+* generate_secure_download_link_secret
 
 ## Howto by example ##

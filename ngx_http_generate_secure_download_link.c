@@ -226,10 +226,13 @@ static char *ngx_http_generate_secure_download_link_compile_secret(
 
 static char *ngx_http_generate_secure_download_generic_script_compiler(ngx_http_generate_secure_download_link_script_compiler_input_t compiler_input, ngx_conf_t *cf) {
     ngx_http_script_compile_t sc;
+
     ngx_memzero(&sc, sizeof(ngx_http_script_compile_t));
     
     sc.cf = cf;
     sc.source = &compiler_input.string;
+    *compiler_input.lengths=NULL;
+    *compiler_input.values=NULL;
     sc.lengths = compiler_input.lengths;
     sc.values = compiler_input.values;
     sc.variables = ngx_http_script_variables_count(&compiler_input.string);
